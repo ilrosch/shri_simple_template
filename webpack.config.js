@@ -120,9 +120,3 @@ const config = {
   // @TODO fallback for crypto
 };
 module.exports = config;
-
-const ghpages = require("gh-pages");
-ghpages.publish("dist", {
-  branch: "master",
-  repo: "https://github.com/ilrosch/shri_simple_template.git",
-});

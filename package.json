@@ -30,7 +30,7 @@
     "lint:css": "npx stylelint src/**/*.css",
     "analyze": "webpack --json stats.json",
     "validate": "node_modules/.bin/statoscope validate -i stats.json --config=./statoscope.config.js",
-    "deploy": "npx gh-pages"
+    "deploy": "gh-pages -d dist -r https://github.com/ilrosch/shri_simple_template.git"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
