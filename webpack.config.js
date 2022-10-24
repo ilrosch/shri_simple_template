@@ -15,6 +15,7 @@ const babelLoader = {
 const config = {
   mode: "development",
   entry: {
+    index: "./public/index.html",
     about: "./src/pages/About.js",
     home: "./src/pages/Home.js",
   },
@@ -27,11 +28,11 @@ const config = {
 
   // Настройка сервера разработки
   devServer: {
-    contentBase: path.join(__dirname, "dist"),
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
     compress: true,
     port: 9000,
-    watchContentBase: true,
-    progress: true,
     open: true,
   },
   // End. Настройка сервера разработки
@@ -57,21 +58,9 @@ const config = {
   },
   // End. Только для production-режима
 
-  // Режим наблюдения за файлами
-
-  watch: true,
-  watchOptions: {
-    // осуществлять повторную сборку через секунду после обнаружения изменений
-    aggregateTimeout: 1000,
-    // игнорируемые файлы или директории
-    ignored: /node_modules/,
-    // проверять файлы на наличие изменений каждую секунду
-    poll: 1000,
-  },
-
-  // End. Режим наблюдения за файлами
   plugins: [
     new HtmlWebpackPlugin(),
+
     new StatoscopePlugin({
       saveStatsTo: "stats.json",
       saveOnlyStats: false,
@@ -85,6 +74,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].[contenthash].js",
+    clean: true,
   },
   module: {
     rules: [
@@ -100,6 +90,13 @@ const config = {
         exclude: /node_modules/,
         use: [babelLoader, "ts-loader"],
       },
+
+      // HTML
+      {
+        test: /\.html$/i,
+        loader: "html-loader",
+      },
+
       {
         test: /\.css$/,
         use: [
@@ -119,8 +116,13 @@ const config = {
     ],
   },
 
-  // @TODO optimizations
   // @TODO lodash treeshaking
   // @TODO fallback for crypto
 };
 module.exports = config;
+
+const ghpages = require("gh-pages");
+ghpages.publish("dist", {
+  branch: "master",
+  repo: "https://github.com/ilrosch/shri_simple_template.git",
+});
