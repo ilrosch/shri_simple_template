@@ -7,7 +7,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const babelLoader = {
   loader: "babel-loader",
   options: {
-    presets: ["@babel/preset-env", "@babel/preset-react"],
+    presets: ["@babel/preset-env",
+      ['@babel/preset-react', { runtime: 'automatic' }]],
     plugins: ["@babel/plugin-proposal-class-properties"],
   },
 };
@@ -15,9 +16,9 @@ const babelLoader = {
 const config = {
   mode: "development",
   entry: {
-    index: "./public/index.html",
-    about: "./src/pages/About.js",
-    home: "./src/pages/Home.js",
+    main: './src/index.js',
+    // about: "./src/pages/About.js",
+    // home: "./src/pages/Home.js",
   },
 
   // Только для development-режима
@@ -48,7 +49,8 @@ const config = {
     concatenateModules: true,
     splitChunks: {
       chunks: "all",
-      minSize: 0,
+      minSize: 10000,
+      maxSize: 250000,
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
@@ -59,9 +61,12 @@ const config = {
   // End. Только для production-режима
 
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+    }),
 
     new StatoscopePlugin({
+      saveReportTo: 'report.html',
       saveStatsTo: "stats.json",
       saveOnlyStats: false,
       open: false,
@@ -75,6 +80,10 @@ const config = {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].[contenthash].js",
     clean: true,
+    library: {
+      name: 'UUID',
+      type: 'var',
+    },
   },
   module: {
     rules: [
